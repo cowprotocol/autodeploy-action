@@ -1,7 +1,7 @@
 {
-  "name": "javascript-action",
+  "name": "autodeploy-action",
   "version": "1.0.0",
-  "description": "JavaScript Action Template",
+  "description": "An action to automatically trigger a re-deployment of Kubernetes pods",
   "main": "index.js",
   "scripts": {
     "lint": "eslint .",
@@ -11,25 +11,21 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/actions/javascript-action.git"
+    "url": "git+https://github.com/cowprotocol/autodeploy-action.git"
   },
-  "keywords": [
-    "GitHub",
-    "Actions",
-    "JavaScript"
-  ],
+  "keywords": [],
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/actions/javascript-action/issues"
+    "url": "https://github.com/cowprotocol/autodeploy-action/issues"
   },
-  "homepage": "https://github.com/actions/javascript-action#readme",
+  "homepage": "https://github.com/cowprotocol/autodeploy-action",
   "dependencies": {
-    "@actions/core": "^1.2.5"
+    "@actions/core": "^1.0.0"
   },
   "devDependencies": {
-    "@vercel/ncc": "^0.31.1",
+    "@vercel/ncc": "^0.33.0",
     "eslint": "^8.0.0",
-    "jest": "^27.2.5"
+    "jest": "^27.0.0"
   }
 }
