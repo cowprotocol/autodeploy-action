@@ -1,20 +1,25 @@
-const core = require('@actions/core');
-const wait = require('./wait');
+const core = require("@actions/core");
+const { AutoDeployApi } = require("./autodeploy");
 
-
-// most @actions toolkit packages have async methods
 async function run() {
+  let status;
   try {
-    const ms = core.getInput('milliseconds');
-    core.info(`Waiting ${ms} milliseconds ...`);
+    const pods = core.getInput("pods", { required: true });
+    const tag = core.getInput("tag") || "develop";
+    const url = core.getInput("url", { required: true });
+    const token = core.getInput("token", { required: true });
 
-    core.debug((new Date()).toTimeString()); // debug is only output if you set the secret `ACTIONS_RUNNER_DEBUG` to true
-    await wait(parseInt(ms));
-    core.info((new Date()).toTimeString());
-
-    core.setOutput('time', new Date().toTimeString());
+    core.info(`Re-deploying pods ${pods} for tag ${tag}`);
+    const api = new AutoDeployApi(url, token);
+    status = await api.redeploy(pods, tag);
   } catch (error) {
+    status = error.status;
     core.setFailed(error.message);
+  }
+
+  if (typeof (status) === "number") {
+    core.info(`Received status code ${status}`);
+    core.setOutput("status_code", status);
   }
 }
 

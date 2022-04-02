@@ -21,7 +21,8 @@
   },
   "homepage": "https://github.com/cowprotocol/autodeploy-action",
   "dependencies": {
-    "@actions/core": "^1.0.0"
+    "@actions/core": "^1.0.0",
+    "@actions/http-client": "^1.0.0"
   },
   "devDependencies": {
     "@vercel/ncc": "^0.33.0",

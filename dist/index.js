@@ -1,6 +1,64 @@
 require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 305:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const { HttpClient } = __nccwpck_require__(925);
+const { BasicCredentialHandler, PersonalAccessTokenCredentialHandler } =
+  __nccwpck_require__(702);
+
+function parseToken(token) {
+  const separator = token.indexOf(":");
+  if (separator >= 0) {
+    const user = token.substring(0, separator);
+    const password = token.substring(separator + 1);
+    return new BasicCredentialHandler(user, password);
+  } else {
+    return new PersonalAccessTokenCredentialHandler(token);
+  }
+}
+
+class AutoDeployApi {
+  constructor(url, token) {
+    this.url = url.replace(/\/*$/, "");
+    this.client = new HttpClient("autodeploy-action", [parseToken(token)]);
+  }
+
+  redeployUrl(pods) {
+    const encodedPods = encodeURI(
+      pods.split(",").map((pod) => pod.trim()).join(","),
+    );
+    return `${this.url}/services/${encodedPods}/rollout`;
+  }
+
+  async redeploy(pods, tag) {
+    const response = await this.client.postJson(
+      this.redeployUrl(pods),
+      { push_data: { tag } },
+    );
+
+    const status = response.statusCode;
+    if (status >= 400) {
+      throw new HttpError(status);
+    }
+
+    return status;
+  }
+}
+
+class HttpError extends Error {
+  constructor(status) {
+    super(`HTTP error ${status}`);
+    this.status = status;
+  }
+}
+
+module.exports = { parseToken, AutoDeployApi, HttpError };
+
+
+/***/ }),
+
 /***/ 351:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -27,7 +85,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.issue = exports.issueCommand = void 0;
-const os = __importStar(__nccwpck_require__(87));
+const os = __importStar(__nccwpck_require__(37));
 const utils_1 = __nccwpck_require__(278);
 /**
  * Commands
@@ -138,8 +196,8 @@ exports.getIDToken = exports.getState = exports.saveState = exports.group = expo
 const command_1 = __nccwpck_require__(351);
 const file_command_1 = __nccwpck_require__(717);
 const utils_1 = __nccwpck_require__(278);
-const os = __importStar(__nccwpck_require__(87));
-const path = __importStar(__nccwpck_require__(622));
+const os = __importStar(__nccwpck_require__(37));
+const path = __importStar(__nccwpck_require__(17));
 const oidc_utils_1 = __nccwpck_require__(41);
 /**
  * The code to exit an action
@@ -448,8 +506,8 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.issueCommand = void 0;
 // We use any as a valid input type
 /* eslint-disable @typescript-eslint/no-explicit-any */
-const fs = __importStar(__nccwpck_require__(747));
-const os = __importStar(__nccwpck_require__(87));
+const fs = __importStar(__nccwpck_require__(147));
+const os = __importStar(__nccwpck_require__(37));
 const utils_1 = __nccwpck_require__(278);
 function issueCommand(command, message) {
     const filePath = process.env[`GITHUB_${command}`];
@@ -671,8 +729,8 @@ exports.PersonalAccessTokenCredentialHandler = PersonalAccessTokenCredentialHand
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const http = __nccwpck_require__(605);
-const https = __nccwpck_require__(211);
+const http = __nccwpck_require__(685);
+const https = __nccwpck_require__(687);
 const pm = __nccwpck_require__(443);
 let tunnel;
 var HttpCodes;
@@ -1289,13 +1347,13 @@ module.exports = __nccwpck_require__(219);
 "use strict";
 
 
-var net = __nccwpck_require__(631);
-var tls = __nccwpck_require__(16);
-var http = __nccwpck_require__(605);
-var https = __nccwpck_require__(211);
-var events = __nccwpck_require__(614);
-var assert = __nccwpck_require__(357);
-var util = __nccwpck_require__(669);
+var net = __nccwpck_require__(808);
+var tls = __nccwpck_require__(404);
+var http = __nccwpck_require__(685);
+var https = __nccwpck_require__(687);
+var events = __nccwpck_require__(361);
+var assert = __nccwpck_require__(491);
+var util = __nccwpck_require__(837);
 
 
 exports.httpOverHttp = httpOverHttp;
@@ -1555,24 +1613,7 @@ exports.debug = debug; // for test
 
 /***/ }),
 
-/***/ 258:
-/***/ ((module) => {
-
-let wait = function (milliseconds) {
-  return new Promise((resolve) => {
-    if (typeof milliseconds !== 'number') {
-      throw new Error('milliseconds not a number');
-    }
-    setTimeout(() => resolve("done!"), milliseconds)
-  });
-};
-
-module.exports = wait;
-
-
-/***/ }),
-
-/***/ 357:
+/***/ 491:
 /***/ ((module) => {
 
 "use strict";
@@ -1580,7 +1621,7 @@ module.exports = require("assert");
 
 /***/ }),
 
-/***/ 614:
+/***/ 361:
 /***/ ((module) => {
 
 "use strict";
@@ -1588,7 +1629,7 @@ module.exports = require("events");
 
 /***/ }),
 
-/***/ 747:
+/***/ 147:
 /***/ ((module) => {
 
 "use strict";
@@ -1596,7 +1637,7 @@ module.exports = require("fs");
 
 /***/ }),
 
-/***/ 605:
+/***/ 685:
 /***/ ((module) => {
 
 "use strict";
@@ -1604,7 +1645,7 @@ module.exports = require("http");
 
 /***/ }),
 
-/***/ 211:
+/***/ 687:
 /***/ ((module) => {
 
 "use strict";
@@ -1612,7 +1653,7 @@ module.exports = require("https");
 
 /***/ }),
 
-/***/ 631:
+/***/ 808:
 /***/ ((module) => {
 
 "use strict";
@@ -1620,7 +1661,7 @@ module.exports = require("net");
 
 /***/ }),
 
-/***/ 87:
+/***/ 37:
 /***/ ((module) => {
 
 "use strict";
@@ -1628,7 +1669,7 @@ module.exports = require("os");
 
 /***/ }),
 
-/***/ 622:
+/***/ 17:
 /***/ ((module) => {
 
 "use strict";
@@ -1636,7 +1677,7 @@ module.exports = require("path");
 
 /***/ }),
 
-/***/ 16:
+/***/ 404:
 /***/ ((module) => {
 
 "use strict";
@@ -1644,7 +1685,7 @@ module.exports = require("tls");
 
 /***/ }),
 
-/***/ 669:
+/***/ 837:
 /***/ ((module) => {
 
 "use strict";
@@ -1694,22 +1735,27 @@ var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
 const core = __nccwpck_require__(186);
-const wait = __nccwpck_require__(258);
+const { AutoDeployApi } = __nccwpck_require__(305);
 
-
-// most @actions toolkit packages have async methods
 async function run() {
+  let status;
   try {
-    const ms = core.getInput('milliseconds');
-    core.info(`Waiting ${ms} milliseconds ...`);
+    const pods = core.getInput("pods", { required: true });
+    const tag = core.getInput("tag") || "develop";
+    const url = core.getInput("url", { required: true });
+    const token = core.getInput("token", { required: true });
 
-    core.debug((new Date()).toTimeString()); // debug is only output if you set the secret `ACTIONS_RUNNER_DEBUG` to true
-    await wait(parseInt(ms));
-    core.info((new Date()).toTimeString());
-
-    core.setOutput('time', new Date().toTimeString());
+    core.info(`Re-deploying pods ${pods} for tag ${tag}`);
+    const api = new AutoDeployApi(url, token);
+    status = await api.redeploy(pods, tag);
   } catch (error) {
+    status = error.status;
     core.setFailed(error.message);
+  }
+
+  if (typeof (status) === "number") {
+    core.info(`Received status code ${status}`);
+    core.setOutput("status_code", status);
   }
 }
 

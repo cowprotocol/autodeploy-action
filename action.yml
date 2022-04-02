@@ -1,13 +1,22 @@
-name: 'Wait'
-description: 'Wait a designated number of milliseconds'
+name: 'Auto-Deploy'
+description: 'Automatically trigger a re-deployment of Kubernetes pods.'
 inputs:
-  milliseconds:  # id of input
-    description: 'number of milliseconds to wait'
+  pods:
+    description: 'The pods to re-deploy'
     required: true
-    default: '1000'
+  tag:
+    description: 'The tag used for re-deploy'
+    required: false
+    default: 'develop'
+  url:
+    description: 'The re-deployment service URL'
+    required: true
+  token:
+    description: 'The access token for interacting with the re-deployment URL'
+    required: true
 outputs:
-  time: # output will be available to future steps
-    description: 'The current time after waiting'
+  status_code:
+    description: 'The status code from the re-deploy HTTP request'
 runs:
   using: 'node16'
   main: 'dist/index.js'

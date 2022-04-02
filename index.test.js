@@ -1,24 +1,38 @@
-const wait = require('./wait');
-const process = require('process');
-const cp = require('child_process');
-const path = require('path');
+const { parseToken, AutoDeployApi } = require("./autodeploy");
 
-test('throws invalid number', async () => {
-  await expect(wait('foo')).rejects.toThrow('milliseconds not a number');
+test("parses username and password", () => {
+  const token = parseToken("u:p:");
+  expect(token.username).toBe("u");
+  expect(token.password).toBe("p:");
 });
 
-test('wait 500 ms', async () => {
-  const start = new Date();
-  await wait(500);
-  const end = new Date();
-  var delta = Math.abs(end - start);
-  expect(delta).toBeGreaterThanOrEqual(500);
+test("parses authorization token", () => {
+  const token = parseToken("abc");
+  expect(token.token).toBe("abc");
 });
 
-// shows how the runner will run a javascript action with env / stdout protocol
-test('test runs', () => {
-  process.env['INPUT_MILLISECONDS'] = 100;
-  const ip = path.join(__dirname, 'index.js');
-  const result = cp.execSync(`node ${ip}`, {env: process.env}).toString();
-  console.log(result);
-})
+test("computes correct redeploy URL", () => {
+  const api = new AutoDeployApi("https://foo.bar/", "u:p");
+  expect(api.redeployUrl("foo, bar baz")).toBe(
+    "https://foo.bar/services/foo,bar%20baz/rollout",
+  );
+});
+
+function dummyApi(url) {
+  const api = new AutoDeployApi("dummy", "dummy");
+  api.redeployUrl = () => url;
+  return api;
+}
+
+test("returns successfully on 2xx status codes", async () => {
+  const api = dummyApi("https://httpbin.org/post");
+  const status = await api.redeploy("foo", "bar");
+  expect(status).toBe(200);
+});
+
+test("throws on error codes", async () => {
+  const api = dummyApi("https://httpbin.org/status/404");
+  await expect(api.redeploy("foo", "bar")).rejects.toThrow(
+    "HTTP error 404",
+  );
+});
