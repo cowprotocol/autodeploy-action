@@ -1,22 +1,23 @@
-name: 'Auto-Deploy'
-description: 'Automatically trigger a re-deployment of Kubernetes pods.'
+name: "Auto-Deploy"
+description: "Automatically trigger a re-deployment of Kubernetes pods."
 inputs:
   pods:
-    description: 'The pods to re-deploy'
-    required: true
+    description: "The pods to re-deploy"
+  images:
+    description: "Re-deploy all pods running this image"
   tag:
-    description: 'The tag used for re-deploy'
+    description: "The tag used for re-deploy"
     required: false
-    default: 'develop'
+    default: "develop"
   url:
-    description: 'The re-deployment service URL'
+    description: "The re-deployment service URL"
     required: true
   token:
-    description: 'The access token for interacting with the re-deployment URL'
+    description: "The access token for interacting with the re-deployment URL"
     required: true
 outputs:
   status_code:
-    description: 'The status code from the re-deploy HTTP request'
+    description: "The status code from the re-deploy HTTP request"
 runs:
-  using: 'node16'
-  main: 'dist/index.js'
+  using: "node16"
+  main: "dist/index.js"

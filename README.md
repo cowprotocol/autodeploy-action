@@ -13,3 +13,13 @@ with:
   url: ${{ secret.AUTODEPLOY_URL }}
   token: ${{ secrets.AUTODEPLOY_TOKEN }}
 ```
+
+alternatively you can trigger restarts by image name (all deployments running that image will restart)
+
+```yaml
+uses: cowprotocol/autodeploy-action@v1
+with:
+  pods: ghcr.io/cowprotocol/services:main
+  url: ${{ secret.AUTODEPLOY_URL }}
+  token: ${{ secrets.AUTODEPLOY_TOKEN }}
+```
