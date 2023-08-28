@@ -14,10 +14,10 @@ async function run() {
     const api = new AutoDeployApi(url, token);
 
     if (pods) {
-      status = await api.redeploy("services", tag);
+      status = await api.redeploy("services", pods, tag);
     }
     if (images) {
-      status = await api.redeploy("images", tag);
+      status = await api.redeploy("images", images, tag);
     }
     if(!pods && !images) {
       throw new Error("Specify either the pods or container image for which you want to trigger a redeploy.");
