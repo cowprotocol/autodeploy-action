@@ -19,16 +19,16 @@ class AutoDeployApi {
     this.client = new HttpClient("autodeploy-action", [parseToken(token)]);
   }
 
-  redeployUrl(pods) {
-    const encodedPods = encodeURI(
-      pods.split(",").map((pod) => pod.trim()).join(","),
+  redeployUrl(type, targets) {
+    const encodedTargets = encodeURI(
+      targets.split(",").map((target) => target.trim()).join(","),
     );
-    return `${this.url}/services/${encodedPods}/rollout`;
+    return `${this.url}/${type}/${encodedTargets}/rollout`;
   }
 
-  async redeploy(pods, tag) {
+  async redeploy(type, targets, tag) {
     const response = await this.client.postJson(
-      this.redeployUrl(pods),
+      this.redeployUrl(type, targets),
       { push_data: { tag } },
     );
 

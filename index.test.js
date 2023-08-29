@@ -13,7 +13,7 @@ test("parses authorization token", () => {
 
 test("computes correct redeploy URL", () => {
   const api = new AutoDeployApi("https://foo.bar/", "u:p");
-  expect(api.redeployUrl("foo, bar baz")).toBe(
+  expect(api.redeployUrl("services", "foo, bar baz")).toBe(
     "https://foo.bar/services/foo,bar%20baz/rollout",
   );
 });
