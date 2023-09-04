@@ -19,7 +19,7 @@ alternatively you can trigger restarts by image name (all deployments running th
 ```yaml
 uses: cowprotocol/autodeploy-action@v1
 with:
-  pods: ghcr.io/cowprotocol/services:main
+  images: ghcr.io/cowprotocol/services:main
   url: ${{ secret.AUTODEPLOY_URL }}
   token: ${{ secrets.AUTODEPLOY_TOKEN }}
 ```
