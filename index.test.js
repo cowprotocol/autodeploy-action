@@ -18,6 +18,13 @@ test("computes correct redeploy URL", () => {
   );
 });
 
+test("properly escapes image names", () => {
+  const api = new AutoDeployApi("https://foo.bar/", "u:p");
+  expect(api.redeployUrl("image", "foo/bar/baz:baw")).toBe(
+    "https://foo.bar/image/foo%2Fbar%2Fbaz%3Abaw/rollout",
+  );
+});
+
 function dummyApi(url) {
   const api = new AutoDeployApi("dummy", "dummy");
   api.redeployUrl = () => url;
