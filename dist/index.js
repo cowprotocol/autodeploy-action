@@ -26,9 +26,10 @@ class AutoDeployApi {
   }
 
   redeployUrl(type, targets) {
-    const encodedTargets = encodeURI(
-      targets.split(",").map((target) => target.trim()).join(","),
-    );
+    const encodedTargets = targets
+      .split(",")
+      .map((target) => encodeURIComponent(target.trim()))
+      .join(",");
     return `${this.url}/${type}/${encodedTargets}/rollout`;
   }
 
