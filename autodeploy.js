@@ -1,6 +1,8 @@
 const { HttpClient } = require("@actions/http-client");
-const { BasicCredentialHandler, PersonalAccessTokenCredentialHandler } =
-  require("@actions/http-client/auth");
+const {
+  BasicCredentialHandler,
+  PersonalAccessTokenCredentialHandler,
+} = require("@actions/http-client/auth");
 
 function parseToken(token) {
   const separator = token.indexOf(":");
@@ -16,7 +18,9 @@ function parseToken(token) {
 class AutoDeployApi {
   constructor(url, token) {
     this.url = url.replace(/\/*$/, "");
-    this.client = new HttpClient("autodeploy-action", [parseToken(token)]);
+    this.client = new HttpClient("autodeploy-action", [parseToken(token)], {
+      socketTimeout: 6 * 60000,
+    });
   }
 
   redeployUrl(type, targets) {
@@ -30,7 +34,7 @@ class AutoDeployApi {
   async redeploy(type, targets, tag) {
     const response = await this.client.postJson(
       this.redeployUrl(type, targets),
-      { push_data: { tag } },
+      { push_data: { tag } }
     );
 
     const status = response.statusCode;
