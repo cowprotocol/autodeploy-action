@@ -15,6 +15,10 @@ inputs:
   token:
     description: "The access token for interacting with the re-deployment URL"
     required: true
+  timeout:
+    description: "The timeout for the re-deployment request"
+    required: false
+    default: 60000
 outputs:
   status_code:
     description: "The status code from the re-deploy HTTP request"
