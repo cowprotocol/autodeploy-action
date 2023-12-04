@@ -23,3 +23,9 @@ with:
   url: ${{ secret.AUTODEPLOY_URL }}
   token: ${{ secrets.AUTODEPLOY_TOKEN }}
 ```
+
+In case the rollout process takes a long time, you may have to set a custom timeout
+
+```yaml
+timeout: 600000 # 10 minutes
+```

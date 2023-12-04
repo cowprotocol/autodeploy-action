@@ -16,10 +16,10 @@ function parseToken(token) {
 }
 
 class AutoDeployApi {
-  constructor(url, token) {
+  constructor(url, token, timeout) {
     this.url = url.replace(/\/*$/, "");
     this.client = new HttpClient("autodeploy-action", [parseToken(token)], {
-      socketTimeout: 6 * 60000,
+      socketTimeout: timeout,
     });
   }
 
