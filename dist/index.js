@@ -22,10 +22,10 @@ function parseToken(token) {
 }
 
 class AutoDeployApi {
-  constructor(url, token) {
+  constructor(url, token, timeout) {
     this.url = url.replace(/\/*$/, "");
     this.client = new HttpClient("autodeploy-action", [parseToken(token)], {
-      socketTimeout: 6 * 60000,
+      socketTimeout: timeout,
     });
   }
 
@@ -1750,9 +1750,10 @@ async function run() {
     const tag = core.getInput("tag") || "develop";
     const url = core.getInput("url", { required: true });
     const token = core.getInput("token", { required: true });
+    const timeout = parseInt(core.getInput("timeout") || 60000);
 
     core.info(`Re-deploying pods ${pods} for tag ${tag}`);
-    const api = new AutoDeployApi(url, token);
+    const api = new AutoDeployApi(url, token, timeout);
 
     if (pods) {
       status = await api.redeploy("services", pods, tag);
