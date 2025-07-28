@@ -2,7 +2,7 @@ const { HttpClient } = require("@actions/http-client");
 const {
   BasicCredentialHandler,
   PersonalAccessTokenCredentialHandler,
-} = require("@actions/http-client/auth");
+} = require("@actions/http-client/lib/auth");
 
 function parseToken(token) {
   const separator = token.indexOf(":");
