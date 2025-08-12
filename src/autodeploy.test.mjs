@@ -1,26 +1,31 @@
-const { parseToken, AutoDeployApi } = require("./autodeploy");
+import assert from "node:assert";
+import test from "node:test";
+
+import { parseToken, AutoDeployApi } from "./autodeploy.mjs";
 
 test("parses username and password", () => {
   const token = parseToken("u:p:");
-  expect(token.username).toBe("u");
-  expect(token.password).toBe("p:");
+  assert.strictEqual(token.username, "u");
+  assert.strictEqual(token.password, "p:");
 });
 
 test("parses authorization token", () => {
   const token = parseToken("abc");
-  expect(token.token).toBe("abc");
+  assert.strictEqual(token.token, "abc");
 });
 
 test("computes correct redeploy URL", () => {
   const api = new AutoDeployApi("https://foo.bar/", "u:p");
-  expect(api.redeployUrl("services", "foo, bar baz")).toBe(
+  assert.strictEqual(
+    api.redeployUrl("services", "foo, bar baz"),
     "https://foo.bar/services/foo,bar%20baz/rollout",
   );
 });
 
 test("properly escapes image names", () => {
   const api = new AutoDeployApi("https://foo.bar/", "u:p");
-  expect(api.redeployUrl("image", "foo/bar/baz:baw")).toBe(
+  assert.strictEqual(
+    api.redeployUrl("image", "foo/bar/baz:baw"),
     "https://foo.bar/image/foo%2Fbar%2Fbaz%3Abaw/rollout",
   );
 });
@@ -34,12 +39,12 @@ function dummyApi(url) {
 test("returns successfully on 2xx status codes", async () => {
   const api = dummyApi("https://httpbin.org/post");
   const status = await api.redeploy("foo", "bar");
-  expect(status).toBe(200);
+  assert.strictEqual(status, 200);
 });
 
 test("throws on error codes", async () => {
   const api = dummyApi("https://httpbin.org/status/404");
-  await expect(api.redeploy("foo", "bar")).rejects.toThrow(
-    "HTTP error 404",
-  );
+  await assert.rejects(() => api.redeploy("foo", "bar"), {
+    message: "HTTP error 404",
+  });
 });

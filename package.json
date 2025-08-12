@@ -2,11 +2,11 @@
   "name": "autodeploy-action",
   "version": "1.0.0",
   "description": "An action to automatically trigger a re-deployment of Kubernetes pods",
-  "main": "index.js",
+  "main": "src/index.mjs",
   "scripts": {
     "lint": "eslint .",
-    "prepare": "ncc build index.js -o dist --source-map --license licenses.txt",
-    "test": "jest",
+    "prepare": "ncc build src/index.mjs --minify -o dist --license licenses.txt",
+    "test": "node --test",
     "all": "npm run lint && npm run prepare && npm run test"
   },
   "repository": {
@@ -21,12 +21,11 @@
   },
   "homepage": "https://github.com/cowprotocol/autodeploy-action",
   "dependencies": {
-    "@actions/core": "^1.0.0",
-    "@actions/http-client": "^1.0.0"
+    "@actions/http-client": "^2.2.3"
   },
   "devDependencies": {
-    "@vercel/ncc": "^0.33.0",
-    "eslint": "^8.0.0",
-    "jest": "^27.0.0"
+    "@actions/core": "^1.11.1",
+    "@vercel/ncc": "^0.38.3",
+    "eslint": "^9.33.0"
   }
 }
