@@ -30,20 +30,20 @@ test("properly escapes image names", () => {
   );
 });
 
-function dummyApi(url) {
+function dummyApi(statusCode) {
   const api = new AutoDeployApi("dummy", "dummy");
-  api.redeployUrl = () => url;
+  api.client.postJson = () => ({ statusCode });
   return api;
 }
 
 test("returns successfully on 2xx status codes", async () => {
-  const api = dummyApi("https://httpbin.org/post");
+  const api = dummyApi(200);
   const status = await api.redeploy("foo", "bar");
   assert.strictEqual(status, 200);
 });
 
 test("throws on error codes", async () => {
-  const api = dummyApi("https://httpbin.org/status/404");
+  const api = dummyApi(404);
   await assert.rejects(() => api.redeploy("foo", "bar"), {
     message: "HTTP error 404",
   });
