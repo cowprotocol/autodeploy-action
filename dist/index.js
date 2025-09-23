@@ -29,17 +29,17 @@ class AutoDeployApi {
     });
   }
 
-  redeployUrl(type, targets) {
+  redeployUrl(type, strategy, targets) {
     const encodedTargets = targets
       .split(",")
       .map((target) => encodeURIComponent(target.trim()))
       .join(",");
-    return `${this.url}/${type}/${encodedTargets}/rollout`;
+    return `${this.url}/${type}/${encodedTargets}/${strategy}`;
   }
 
-  async redeploy(type, targets, tag) {
+  async redeploy(type, strategy, targets, tag) {
     const response = await this.client.postJson(
-      this.redeployUrl(type, targets),
+      this.redeployUrl(type, strategy, targets),
       { push_data: { tag } }
     );
 
@@ -1747,19 +1747,20 @@ async function run() {
   try {
     const pods = core.getInput("pods");
     const images = core.getInput("images");
+    const strategy = core.getInput("strategy")
     const tag = core.getInput("tag") || "develop";
     const url = core.getInput("url", { required: true });
     const token = core.getInput("token", { required: true });
     const timeout = parseInt(core.getInput("timeout") || 60000);
 
-    core.info(`Re-deploying pods ${pods} for tag ${tag}`);
+    core.info(`Re-deploying pods ${pods} for tag ${tag} with a ${strategy} strategy`);
     const api = new AutoDeployApi(url, token, timeout);
 
     if (pods) {
-      status = await api.redeploy("services", pods, tag);
+      status = await api.redeploy("services", strategy, pods, tag);
     }
     if (images) {
-      status = await api.redeploy("images", images, tag);
+      status = await api.redeploy("images", strategy, images, tag);
     }
     if(!pods && !images) {
       throw new Error("Specify either the pods or container image for which you want to trigger a redeploy.");

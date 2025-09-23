@@ -23,17 +23,17 @@ class AutoDeployApi {
     });
   }
 
-  redeployUrl(type, targets) {
+  redeployUrl(type, strategy, targets) {
     const encodedTargets = targets
       .split(",")
       .map((target) => encodeURIComponent(target.trim()))
       .join(",");
-    return `${this.url}/${type}/${encodedTargets}/rollout`;
+    return `${this.url}/${type}/${encodedTargets}/${strategy}`;
   }
 
-  async redeploy(type, targets, tag) {
+  async redeploy(type, strategy, targets, tag) {
     const response = await this.client.postJson(
-      this.redeployUrl(type, targets),
+      this.redeployUrl(type, strategy, targets),
       { push_data: { tag } }
     );
 
