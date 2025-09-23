@@ -1,6 +1,6 @@
 {
   "name": "autodeploy-action",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "An action to automatically trigger a re-deployment of Kubernetes pods",
   "main": "index.js",
   "scripts": {

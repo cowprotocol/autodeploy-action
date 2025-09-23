@@ -13,14 +13,14 @@ test("parses authorization token", () => {
 
 test("computes correct redeploy URL", () => {
   const api = new AutoDeployApi("https://foo.bar/", "u:p");
-  expect(api.redeployUrl("services", "foo, bar baz")).toBe(
+  expect(api.redeployUrl("services", "rollout", "foo, bar baz")).toBe(
     "https://foo.bar/services/foo,bar%20baz/rollout",
   );
 });
 
 test("properly escapes image names", () => {
   const api = new AutoDeployApi("https://foo.bar/", "u:p");
-  expect(api.redeployUrl("image", "foo/bar/baz:baw")).toBe(
+  expect(api.redeployUrl("image", "rollout", "foo/bar/baz:baw")).toBe(
     "https://foo.bar/image/foo%2Fbar%2Fbaz%3Abaw/rollout",
   );
 });
@@ -33,13 +33,13 @@ function dummyApi(url) {
 
 test("returns successfully on 2xx status codes", async () => {
   const api = dummyApi("https://httpbin.org/post");
-  const status = await api.redeploy("foo", "bar");
+  const status = await api.redeploy("foo", "rollout", "bar");
   expect(status).toBe(200);
 });
 
 test("throws on error codes", async () => {
   const api = dummyApi("https://httpbin.org/status/404");
-  await expect(api.redeploy("foo", "bar")).rejects.toThrow(
+  await expect(api.redeploy("foo", "rollout", "bar")).rejects.toThrow(
     "HTTP error 404",
   );
 });

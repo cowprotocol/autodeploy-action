@@ -9,6 +9,14 @@ inputs:
     description: "The tag used for re-deploy"
     required: false
     default: "develop"
+  strategy:
+    description: "The strategy to use for this deployment"
+    required: false
+    default: "rollout"
+    type: choice
+    options:
+      - rollout
+      - restart
   url:
     description: "The re-deployment service URL"
     required: true
