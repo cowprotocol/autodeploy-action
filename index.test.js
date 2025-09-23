@@ -32,13 +32,13 @@ function dummyApi(url) {
 }
 
 test("returns successfully on 2xx status codes", async () => {
-  const api = dummyApi("https://httpbin.org/post");
+  const api = dummyApi("https://httpbingo.org/post");
   const status = await api.redeploy("foo", "rollout", "bar");
   expect(status).toBe(200);
 });
 
 test("throws on error codes", async () => {
-  const api = dummyApi("https://httpbin.org/status/404");
+  const api = dummyApi("https://httpbingo.org/status/404");
   await expect(api.redeploy("foo", "rollout", "bar")).rejects.toThrow(
     "HTTP error 404",
   );
